@@ -40,7 +40,7 @@ export default async function BebidasPage() {
               {drink.image_url ? (
                 <img 
                   src={drink.image_url} 
-                  alt={drink.name}
+                  alt={drink.nombre}
                   className="w-full h-full object-cover"
                 />
               ) : (
@@ -62,9 +62,9 @@ export default async function BebidasPage() {
                   {(drink as any).category_name || 'Sin categoría'}
                 </span>
               </div>
-              <h3 className="font-bold text-lg text-gray-800 line-clamp-1">{drink.name}</h3>
+              <h3 className="font-bold text-lg text-gray-800 line-clamp-1">{drink.nombre}</h3>
               <p className="text-2xl font-black text-blue-600 mt-2">
-                ${drink.price.toLocaleString('es-CO')}
+                ${drink.precio.toLocaleString('es-CO')}
               </p>
               
               {/* Acciones */}

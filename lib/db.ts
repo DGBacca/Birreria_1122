@@ -294,6 +294,58 @@ export const db = {
     if (order) { order.status = 'paid'; order.closed_at = new Date(); }
   },
 
+  async createDrink(data: Partial<Drink>): Promise<Drink> {
+    const newDrink: Drink = {
+      id: Date.now(),
+      nombre: data.nombre || '',
+      precio: data.precio || 0,
+      descripcion: data.descripcion || '',
+      caracteristicas: data.caracteristicas || '',
+      contenido: data.contenido || '',
+      estilo: data.estilo || '',
+      color: data.color || '',
+      aroma: data.aroma || '',
+      sabor: data.sabor || '',
+      cuerpo: data.cuerpo || '',
+      alcohol: data.alcohol || '',
+      origen: data.origen || '',
+      cervecera: data.cervecera || '',
+      presentacion: data.presentacion || '',
+      maridaje: data.maridaje || '',
+      category_id: data.category_id || 1,
+      image_url: data.image_url || '',
+      active: true,
+      stock: data.stock || 0,
+    };
+    
+    // En una DB real esto sería un INSERT. Aquí lo agregamos a la tabla correspondiente.
+    const category = MOCK_CATEGORIES.find(c => c.id === newDrink.category_id);
+    if (category && DATABASE[category.name]) {
+      DATABASE[category.name].push(newDrink);
+    }
+    
+    return newDrink;
+  },
+
+  async updateDrink(id: number, data: Partial<Drink>): Promise<Drink | null> {
+    const drink = await this.getDrinkById(id);
+    if (!drink) return null;
+    
+    Object.assign(drink, data);
+    return drink;
+  },
+
+  async deleteDrink(id: number): Promise<boolean> {
+    for (const catName in DATABASE) {
+      const index = DATABASE[catName].findIndex(d => d.id === id);
+      if (index !== -1) {
+        DATABASE[catName].splice(index, 1);
+        return true;
+      }
+    }
+    return false;
+  },
+
   async query(queryString: string) {
     console.log('Query Executing on Structured DB:', queryString);
     return { rows: [] };

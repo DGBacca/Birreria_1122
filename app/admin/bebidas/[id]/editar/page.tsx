@@ -38,7 +38,7 @@ export default async function EditarBebidaPage({
       </Link>
 
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Editar Bebida: {drink.name}</h1>
+        <h1 className="text-3xl font-bold text-gray-900">Editar Bebida: {drink.nombre}</h1>
         <p className="text-gray-500">Actualiza la información técnica o comercial del producto</p>
       </div>
 

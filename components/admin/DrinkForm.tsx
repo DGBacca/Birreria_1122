@@ -1,19 +1,12 @@
-/**
- * components/admin/DrinkForm.tsx
- * 
- * Componente de formulario para crear o editar bebidas.
- * Maneja el estado local para la carga de imágenes y el envío de datos a la API.
- */
-
-'use client'; // Indica que este es un Client Component
+'use client';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Category } from '@/types';
+import { Category, Drink } from '@/types';
 
 interface DrinkFormProps {
   categories: Category[];
-  initialData?: any; // Datos iniciales si estamos en modo edición
+  initialData?: Drink; // Usamos el tipo Drink correctamente
 }
 
 export function DrinkForm({ categories, initialData }: DrinkFormProps) {
@@ -21,9 +14,6 @@ export function DrinkForm({ categories, initialData }: DrinkFormProps) {
   const [loading, setLoading] = useState(false);
   const [imagePreview, setImagePreview] = useState(initialData?.image_url || '');
 
-  /**
-   * Maneja la subida de la imagen a Vercel Blob
-   */
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -32,7 +22,6 @@ export function DrinkForm({ categories, initialData }: DrinkFormProps) {
       const formData = new FormData();
       formData.append('file', file);
 
-      // Enviamos el archivo a nuestra ruta de API /api/upload
       const res = await fetch('/api/upload', {
         method: 'POST',
         body: formData,
@@ -41,7 +30,6 @@ export function DrinkForm({ categories, initialData }: DrinkFormProps) {
       if (!res.ok) throw new Error('Error al subir imagen');
 
       const { url } = await res.json();
-      // Guardamos la URL generada para mostrar una vista previa y enviarla luego con el formulario
       setImagePreview(url);
     } catch (error) {
       alert('Error al subir la imagen. Por favor intenta de nuevo.');
@@ -49,36 +37,34 @@ export function DrinkForm({ categories, initialData }: DrinkFormProps) {
     }
   };
 
-  /**
-   * Maneja el envío del formulario completo
-   */
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
 
-    // Recolectamos todos los datos del formulario usando FormData
     const formData = new FormData(e.currentTarget);
     const data = {
-      name: formData.get('name'),
-      price: parseFloat(formData.get('price') as string),
-      description: formData.get('description'),
+      nombre: formData.get('nombre'),
+      precio: parseFloat(formData.get('precio') as string),
+      descripcion: formData.get('descripcion'),
+      caracteristicas: formData.get('caracteristicas'),
       category_id: parseInt(formData.get('category_id') as string),
       image_url: imagePreview,
       stock: parseInt(formData.get('stock') as string),
-      // Características técnicas adicionales
-      content: formData.get('content'),
-      style: formData.get('style'),
+      contenido: formData.get('contenido'),
+      estilo: formData.get('estilo'),
       color: formData.get('color'),
-      flavor: formData.get('flavor'),
+      sabor: formData.get('sabor'),
       aroma: formData.get('aroma'),
-      alcohol_content: formData.get('alcohol_content'),
-      body: formData.get('body'),
-      presentation: formData.get('presentation'),
-      pairing: formData.get('pairing'),
+      alcohol: formData.get('alcohol'),
+      cuerpo: formData.get('cuerpo'),
+      presentacion: formData.get('presentacion'),
+      maridaje: formData.get('maridaje'),
+      origen: formData.get('origen'),
+      cervecera: formData.get('cervecera'),
+      active: true,
     };
 
     try {
-      // Determinamos si es creación (POST) o edición (PUT)
       const method = initialData ? 'PUT' : 'POST';
       const url = initialData ? `/api/bebidas/${initialData.id}` : '/api/bebidas';
 
@@ -90,7 +76,6 @@ export function DrinkForm({ categories, initialData }: DrinkFormProps) {
 
       if (!res.ok) throw new Error('Error al guardar los datos');
 
-      // Redirigir a la lista y refrescar los Server Components
       router.push('/admin/bebidas');
       router.refresh();
     } catch (error) {
@@ -114,10 +99,10 @@ export function DrinkForm({ categories, initialData }: DrinkFormProps) {
             <label className="text-sm font-semibold text-gray-700">Nombre de la bebida *</label>
             <input
               type="text"
-              name="name"
+              name="nombre"
               required
               placeholder="Ej: Erdinger Pikantus 500ml"
-              defaultValue={initialData?.name}
+              defaultValue={initialData?.nombre}
               className="w-full border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 transition-all outline-none border"
             />
           </div>
@@ -126,11 +111,11 @@ export function DrinkForm({ categories, initialData }: DrinkFormProps) {
             <label className="text-sm font-semibold text-gray-700">Precio (S) *</label>
             <input
               type="number"
-              name="price"
-              step="0.01"
+              name="precio"
+              step="1"
               required
-              placeholder="0.00"
-              defaultValue={initialData?.price}
+              placeholder="0"
+              defaultValue={initialData?.precio}
               className="w-full border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 transition-all outline-none border"
             />
           </div>
@@ -164,11 +149,22 @@ export function DrinkForm({ categories, initialData }: DrinkFormProps) {
         <div className="mt-6 space-y-2">
           <label className="text-sm font-semibold text-gray-700">Descripción Comercial</label>
           <textarea
-            name="description"
+            name="descripcion"
             rows={3}
             placeholder="Escribe una breve descripción para el cliente..."
-            defaultValue={initialData?.description}
+            defaultValue={initialData?.descripcion}
             className="w-full border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 transition-all outline-none border resize-none"
+          />
+        </div>
+
+        <div className="mt-4 space-y-2">
+          <label className="text-sm font-semibold text-gray-700">Características Destacadas</label>
+          <input
+            type="text"
+            name="caracteristicas"
+            placeholder="Ej: Medalla de oro 2023, Edición limitada..."
+            defaultValue={initialData?.caracteristicas}
+            className="w-full border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 transition-all outline-none border"
           />
         </div>
       </div>
@@ -216,17 +212,17 @@ export function DrinkForm({ categories, initialData }: DrinkFormProps) {
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
         <h3 className="text-lg font-bold mb-6 flex items-center gap-2">
           <span className="w-2 h-6 bg-blue-600 rounded-full"></span>
-          Características Técnicas (Específicas)
+          Ficha Técnica
         </h3>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <div className="space-y-2">
             <label className="text-sm font-semibold text-gray-700">Contenido</label>
-            <input type="text" name="content" placeholder="ej: 500ml" defaultValue={initialData?.content} className="technical-input" />
+            <input type="text" name="contenido" placeholder="ej: 500ml" defaultValue={initialData?.contenido} className="technical-input" />
           </div>
           <div className="space-y-2">
             <label className="text-sm font-semibold text-gray-700">Estilo</label>
-            <input type="text" name="style" placeholder="ej: Weizenbock" defaultValue={initialData?.style} className="technical-input" />
+            <input type="text" name="estilo" placeholder="ej: Weizenbock" defaultValue={initialData?.estilo} className="technical-input" />
           </div>
           <div className="space-y-2">
             <label className="text-sm font-semibold text-gray-700">Color</label>
@@ -234,22 +230,30 @@ export function DrinkForm({ categories, initialData }: DrinkFormProps) {
           </div>
           <div className="space-y-2">
             <label className="text-sm font-semibold text-gray-700">Graduación Alcohólica</label>
-            <input type="text" name="alcohol_content" placeholder="ej: 7.3%" defaultValue={initialData?.alcohol_content} className="technical-input" />
+            <input type="text" name="alcohol" placeholder="ej: 7.3%" defaultValue={initialData?.alcohol} className="technical-input" />
           </div>
           <div className="space-y-2">
             <label className="text-sm font-semibold text-gray-700">Cuerpo</label>
-            <input type="text" name="body" placeholder="ej: Pleno y aterciopelado" defaultValue={initialData?.body} className="technical-input" />
+            <input type="text" name="cuerpo" placeholder="ej: Pleno y aterciopelado" defaultValue={initialData?.cuerpo} className="technical-input" />
           </div>
           <div className="space-y-2">
             <label className="text-sm font-semibold text-gray-700">Presentación</label>
-            <input type="text" name="presentation" placeholder="ej: Botella de vidrio" defaultValue={initialData?.presentation} className="technical-input" />
+            <input type="text" name="presentacion" placeholder="ej: Botella de vidrio" defaultValue={initialData?.presentacion} className="technical-input" />
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-semibold text-gray-700">Origen</label>
+            <input type="text" name="origen" placeholder="ej: Alemania" defaultValue={initialData?.origen} className="technical-input" />
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-semibold text-gray-700">Cervecera / Marca</label>
+            <input type="text" name="cervecera" placeholder="ej: Erdinger" defaultValue={initialData?.cervecera} className="technical-input" />
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
           <div className="space-y-2">
             <label className="text-sm font-semibold text-gray-700">Sabor</label>
-            <textarea name="flavor" rows={2} placeholder="Notas de malta, caramelo..." defaultValue={initialData?.flavor} className="technical-input resize-none" />
+            <textarea name="sabor" rows={2} placeholder="Notas de malta, caramelo..." defaultValue={initialData?.sabor} className="technical-input resize-none" />
           </div>
           <div className="space-y-2">
             <label className="text-sm font-semibold text-gray-700">Aroma</label>
@@ -257,12 +261,11 @@ export function DrinkForm({ categories, initialData }: DrinkFormProps) {
           </div>
           <div className="space-y-2 md:col-span-2">
             <label className="text-sm font-semibold text-gray-700">Maridaje Sugerido</label>
-            <textarea name="pairing" rows={2} placeholder="Carnes ahumadas, quesos curados..." defaultValue={initialData?.pairing} className="technical-input resize-none" />
+            <textarea name="maridaje" rows={2} placeholder="Carnes ahumadas, quesos curados..." defaultValue={initialData?.maridaje} className="technical-input resize-none" />
           </div>
         </div>
       </div>
 
-      {/* Botones de acción */}
       <div className="flex gap-4 sticky bottom-8 bg-white/80 backdrop-blur-md p-4 rounded-2xl shadow-xl border border-gray-100">
         <button
           type="submit"
@@ -280,7 +283,6 @@ export function DrinkForm({ categories, initialData }: DrinkFormProps) {
         </button>
       </div>
 
-      {/* Estilos locales para inputs técnicos */}
       <style jsx>{`
         .technical-input {
           width: 100%;

@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
     const data = await request.json();
     
     // Validación básica (puedes expandir esto con Zod)
-    if (!data.name || !data.price || !data.category_id) {
+    if (!data.nombre || !data.precio || !data.category_id) {
       return NextResponse.json({ error: 'Faltan campos obligatorios' }, { status: 400 });
     }
 
