@@ -192,17 +192,34 @@ export const db = {
   // --- USUARIOS (USERS) ---
 
   async getUsers(): Promise<User[]> {
-    const { rows } = await sql<User>`SELECT id, email, name, role, active, created_at FROM users ORDER BY created_at DESC`;
+    const { rows } = await sql<User>`
+      SELECT id, email, name, apellido, cedula, telefono, direccion, photo_url, role, active, created_at 
+      FROM users 
+      ORDER BY created_at DESC
+    `;
     return rows;
   },
 
   async createUser(data: Partial<User>): Promise<User> {
     const { rows } = await sql<User>`
-      INSERT INTO users (email, name, password_hash, role, active, created_at)
-      VALUES (${data.email}, ${data.name}, ${data.password_hash}, ${data.role || 'mesero'}, true, NOW())
+      INSERT INTO users (email, name, apellido, cedula, telefono, direccion, password_hash, role, active, created_at)
+      VALUES (${data.email}, ${data.name}, ${data.apellido}, ${data.cedula}, ${data.telefono}, ${data.direccion}, ${data.password_hash}, ${data.role || 'mesero'}, true, NOW())
       RETURNING *
     `;
     return rows[0];
+  },
+
+  async updateUser(id: number, data: Partial<User>): Promise<void> {
+    // Construimos la query dinámicamente según lo que se envíe
+    if (data.password_hash) {
+      await sql`UPDATE users SET password_hash = ${data.password_hash} WHERE id = ${id}`;
+    }
+    if (data.photo_url) {
+      await sql`UPDATE users SET photo_url = ${data.photo_url} WHERE id = ${id}`;
+    }
+    if (data.name) {
+      await sql`UPDATE users SET name = ${data.name}, apellido = ${data.apellido}, cedula = ${data.cedula}, telefono = ${data.telefono}, direccion = ${data.direccion} WHERE id = ${id}`;
+    }
   },
 
   async toggleUserActive(id: number, active: boolean): Promise<void> {

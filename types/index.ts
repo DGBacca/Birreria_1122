@@ -12,6 +12,11 @@ export interface User {
   id: number;
   email: string;
   name: string;
+  apellido?: string;
+  cedula?: string;
+  telefono?: string;
+  direccion?: string;
+  photo_url?: string;
   role: 'admin' | 'mesero'; // Roles definidos en la documentación
   active?: boolean;
   created_at?: Date;

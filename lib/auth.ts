@@ -54,20 +54,35 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     // El callback JWT se ejecuta cuando se crea o actualiza el token
-    async jwt({ token, user }) {
-      // Si el usuario acaba de iniciar sesión, inyectamos su rol en el token
+    async jwt({ token, user, trigger, session }) {
+      // Si el usuario acaba de iniciar sesión
       if (user) {
-        token.role = (user as any).role;
-        token.id = user.id;
+        const u = user as any;
+        token.role = u.role;
+        token.id = u.id;
+        token.apellido = u.apellido;
+        token.cedula = u.cedula;
+        token.telefono = u.telefono;
+        token.direccion = u.direccion;
+        token.photo_url = u.photo_url;
+      }
+      // Si el usuario actualizó su sesión (ej: cambió foto)
+      if (trigger === "update" && session) {
+        return { ...token, ...session };
       }
       return token;
     },
     // El callback session define qué información será accesible desde el cliente (useSession)
     async session({ session, token }) {
       if (session.user) {
-        // Pasamos el rol y el ID del token a la sesión del cliente
-        (session.user as any).role = token.role as string;
-        (session.user as any).id = token.id as string;
+        const u = session.user as any;
+        u.role = token.role;
+        u.id = token.id;
+        u.apellido = token.apellido;
+        u.cedula = token.cedula;
+        u.telefono = token.telefono;
+        u.direccion = token.direccion;
+        u.photo_url = token.photo_url;
       }
       return session;
     }

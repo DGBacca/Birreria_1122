@@ -11,6 +11,9 @@ export const metadata: Metadata = {
   description: "Disfruta de nuestra selección premium de cervezas artesanales, vinos y cócteles.",
 };
 
+import NextAuthProvider from "@/components/providers/NextAuthProvider";
+import Header from "@/components/layout/Header";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -18,8 +21,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <body className={`${inter.variable} ${outfit.variable} font-sans antialiased bg-gray-50`}>
-        {children}
+      <body className={`${inter.variable} ${outfit.variable} font-sans antialiased bg-[#0f1115]`}>
+        <NextAuthProvider>
+          <Header />
+          {children}
+        </NextAuthProvider>
       </body>
     </html>
   );
