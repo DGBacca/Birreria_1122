@@ -189,6 +189,26 @@ export const db = {
     return rows[0];
   },
 
+  // --- USUARIOS (USERS) ---
+
+  async getUsers(): Promise<User[]> {
+    const { rows } = await sql<User>`SELECT id, email, name, role, active, created_at FROM users ORDER BY created_at DESC`;
+    return rows;
+  },
+
+  async createUser(data: Partial<User>): Promise<User> {
+    const { rows } = await sql<User>`
+      INSERT INTO users (email, name, password_hash, role, active, created_at)
+      VALUES (${data.email}, ${data.name}, ${data.password_hash}, ${data.role || 'mesero'}, true, NOW())
+      RETURNING *
+    `;
+    return rows[0];
+  },
+
+  async toggleUserActive(id: number, active: boolean): Promise<void> {
+    await sql`UPDATE users SET active = ${active} WHERE id = ${id}`;
+  },
+
   // --- GENÉRICO ---
   
   async query(queryString: string, params: any[] = []) {

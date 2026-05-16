@@ -29,9 +29,14 @@ export const authOptions: NextAuthOptions = {
           SELECT * FROM users WHERE email = ${credentials.email}
         `;
         
-        const user = rows[0];
+        const user = rows[0] as any;
         // Si el usuario no existe, rechazamos la autenticación
         if (!user) return null;
+
+        // Verificar si la cuenta está activa
+        if (!user.active) {
+          throw new Error('CUENTA_INACTIVA');
+        }
 
         // Comparar la contraseña ingresada con el hash guardado en la DB
         const isValid = await bcrypt.compare(credentials.password, user.password_hash);
