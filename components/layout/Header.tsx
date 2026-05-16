@@ -5,6 +5,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useSession, signOut } from 'next-auth/react';
 import { Suspense, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 
