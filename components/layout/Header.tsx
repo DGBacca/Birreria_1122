@@ -31,18 +31,11 @@ function HeaderContent() {
         )}
       </div>
 
-      {/* Navegación Derecha */}
-      <div className="flex items-center gap-8">
-        <Link 
-          href="/menu" 
-          className="text-amber-500 hover:text-amber-400 text-sm font-black uppercase tracking-widest transition-all hover:scale-105"
-        >
-          MENÚ
-        </Link>
-
+      {/* Navegación Derecha — solo LOGIN o perfil de usuario */}
+      <div className="flex items-center">
         {session ? (
           <div className="relative">
-            <button 
+            <button
               onClick={() => setShowDropdown(!showDropdown)}
               className="flex items-center gap-3 bg-white/5 hover:bg-white/10 p-1 pr-4 rounded-full transition-all border border-white/10"
             >
@@ -64,23 +57,26 @@ function HeaderContent() {
                   <p className="text-white text-sm font-bold truncate">{session.user?.name}</p>
                   <p className="text-gray-500 text-[10px] uppercase font-black tracking-widest">{(session.user as any).role}</p>
                 </div>
-                
-                <Link href="/perfil" className="block px-4 py-2 text-gray-400 hover:text-white hover:bg-white/5 text-sm font-bold transition-colors">
+
+                <Link href="/perfil" onClick={() => setShowDropdown(false)} className="block px-4 py-2 text-gray-400 hover:text-white hover:bg-white/5 text-sm font-bold transition-colors">
                   MI PERFIL
                 </Link>
-                
+
                 {(session.user as any).role === 'admin' && (
                   <>
-                    <Link href="/admin" className="block px-4 py-2 text-gray-400 hover:text-white hover:bg-white/5 text-sm font-bold transition-colors">
+                    <Link href="/admin" onClick={() => setShowDropdown(false)} className="block px-4 py-2 text-gray-400 hover:text-white hover:bg-white/5 text-sm font-bold transition-colors">
                       ADMINISTRACIÓN
                     </Link>
-                    <Link href="/admin/usuarios" className="block px-4 py-2 text-gray-400 hover:text-white hover:bg-white/5 text-sm font-bold transition-colors">
+                    <Link href="/admin/usuarios" onClick={() => setShowDropdown(false)} className="block px-4 py-2 text-gray-400 hover:text-white hover:bg-white/5 text-sm font-bold transition-colors">
                       GESTIÓN PERSONAL
+                    </Link>
+                    <Link href="/admin/carrusel" onClick={() => setShowDropdown(false)} className="block px-4 py-2 text-amber-500 hover:text-amber-400 hover:bg-amber-500/5 text-sm font-bold transition-colors">
+                      🖼 CARRUSEL
                     </Link>
                   </>
                 )}
 
-                <button 
+                <button
                   onClick={() => signOut()}
                   className="w-full text-left px-4 py-2 text-red-500 hover:bg-red-500/10 text-sm font-bold transition-colors mt-2 pt-2 border-t border-white/5"
                 >
@@ -90,8 +86,8 @@ function HeaderContent() {
             )}
           </div>
         ) : (
-          <Link 
-            href="/login" 
+          <Link
+            href="/login"
             className="text-xs font-black text-white hover:text-amber-500 transition-colors uppercase tracking-[0.2em]"
           >
             LOGIN
@@ -105,7 +101,7 @@ function HeaderContent() {
 export default function Header() {
   return (
     <header className="bg-black border-b border-white/5 sticky top-0 z-50 h-20 shadow-2xl">
-      <Suspense fallback={<div className="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between opacity-50 text-white">Cargando...</div>}>
+      <Suspense fallback={<div className="max-w-7xl mx-auto px-4 h-20 flex items-center opacity-30 text-white font-black">BIRRERIA 11•22</div>}>
         <HeaderContent />
       </Suspense>
     </header>
