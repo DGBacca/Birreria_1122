@@ -7,20 +7,30 @@
 import Link from 'next/link';
 import { useSession, signOut } from 'next-auth/react';
 import { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 
 export default function Header() {
   const { data: session } = useSession();
+  const searchParams = useSearchParams();
+  const table = searchParams.get('table');
   const [showDropdown, setShowDropdown] = useState(false);
 
   return (
     <header className="bg-[#0f1115]/80 backdrop-blur-md border-b border-white/5 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2">
-          <span className="text-2xl font-black text-white tracking-tighter">
-            BIRRERIA <span className="text-amber-500">11•22</span>
-          </span>
-        </Link>
+        {/* Logo y Mesa */}
+        <div className="flex items-center gap-4">
+          <Link href="/" className="flex items-center gap-2">
+            <span className="text-2xl font-black text-white tracking-tighter">
+              BIRRERIA <span className="text-amber-500">11•22</span>
+            </span>
+          </Link>
+          {table && (
+            <div className="bg-amber-500/10 text-amber-500 px-3 py-1 rounded-full text-[10px] font-black border border-amber-500/20 uppercase">
+              Mesa #{table}
+            </div>
+          )}
+        </div>
 
         {/* Navegación Derecha */}
         <div className="flex items-center gap-6">

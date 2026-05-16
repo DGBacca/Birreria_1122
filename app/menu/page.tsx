@@ -25,23 +25,6 @@ export default async function MenuPage({
 
   return (
     <div className="min-h-screen bg-[#0f1115] text-white">
-      {/* Header Premium */}
-      <header className="sticky top-0 z-30 bg-[#161b22]/90 backdrop-blur-lg border-b border-white/5">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex justify-between items-center">
-            <h1 className="text-2xl font-black tracking-tighter">
-              BIRRERIA <span className="text-amber-500">11•22</span>
-            </h1>
-            {/* Si el cliente escaneó un QR específico de mesa, lo mostramos aquí */}
-            {table && (
-              <div className="bg-amber-500/10 text-amber-500 px-3 py-1 rounded-full text-xs font-bold border border-amber-500/20">
-                Mesa #{table}
-              </div>
-            )}
-          </div>
-        </div>
-      </header>
-
       {/* Componente de Filtro: Permite al usuario navegar entre Cervezas, Vinos, etc. */}
       <CategoryFilter categories={categories} currentCategory={categoryId} />
 
