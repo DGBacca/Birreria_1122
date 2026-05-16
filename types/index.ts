@@ -15,6 +15,7 @@ export interface User {
   role: 'admin' | 'mesero'; // Roles definidos en la documentación
   active?: boolean;
   created_at?: Date;
+  password_hash?: string;
 }
 
 // Representa una categoría de bebidas (ej: Cervezas, Vinos)
