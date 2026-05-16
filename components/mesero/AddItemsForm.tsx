@@ -27,7 +27,7 @@ export function AddItemsForm({
 
   // Filtrar bebidas localmente para una respuesta instantánea
   const filteredDrinks = drinks.filter(drink => {
-    const matchesSearch = drink.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = drink.nombre.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === 'all' || drink.category_id === selectedCategory;
     return matchesSearch && matchesCategory;
   });
@@ -91,8 +91,8 @@ export function AddItemsForm({
                 {drink.image_url && <img src={drink.image_url} alt="" className="w-full h-full object-cover" />}
               </div>
               <div>
-                <h4 className="font-bold text-gray-800">{drink.name}</h4>
-                <p className="text-sm text-gray-500">${drink.price.toLocaleString()}</p>
+                <h4 className="font-bold text-gray-800">{drink.nombre}</h4>
+                <p className="text-sm text-gray-500">${drink.precio.toLocaleString()}</p>
               </div>
             </div>
             

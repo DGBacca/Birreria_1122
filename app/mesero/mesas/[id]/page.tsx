@@ -7,6 +7,7 @@
  */
 
 import { db } from '@/lib/db';
+import { OrderItem } from '@/types';
 import { AddItemsForm } from '@/components/mesero/AddItemsForm';
 import { OrderSummary } from '@/components/mesero/OrderSummary';
 import Link from 'next/link';
@@ -24,7 +25,7 @@ export default async function MesaPage({ params }: { params: Promise<{ id: strin
   ]);
 
   // Si hay una orden activa, obtenemos sus productos detallados
-  let orderItems = [];
+  let orderItems: OrderItem[] = [];
   if (order) {
     orderItems = await db.getOrderItems(order.id);
   }
