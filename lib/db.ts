@@ -226,6 +226,21 @@ export const db = {
     await sql`UPDATE users SET active = ${active} WHERE id = ${id}`;
   },
 
+  // --- CARRUSEL (CAROUSEL) ---
+
+  async getCarouselImages(): Promise<any[]> {
+    const { rows } = await sql`SELECT * FROM carousel_images ORDER BY display_order ASC, created_at DESC`;
+    return rows;
+  },
+
+  async addCarouselImage(url: string, altText: string = ''): Promise<void> {
+    await sql`INSERT INTO carousel_images (url, alt_text) VALUES (${url}, ${altText})`;
+  },
+
+  async deleteCarouselImage(id: number): Promise<void> {
+    await sql`DELETE FROM carousel_images WHERE id = ${id}`;
+  },
+
   // --- GENÉRICO ---
   
   async query(queryString: string, params: any[] = []) {

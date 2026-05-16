@@ -19,9 +19,9 @@ function HeaderContent() {
     <div className="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
       {/* Logo y Mesa */}
       <div className="flex items-center gap-4">
-        <Link href="/" className="flex items-center gap-2">
+        <Link href="/" className="flex items-center gap-2 group">
           <span className="text-2xl font-black text-white tracking-tighter">
-            BIRRERIA <span className="text-amber-500">11•22</span>
+            BIRRERIA <span className="text-amber-500 group-hover:text-amber-400 transition-colors">11•22</span>
           </span>
         </Link>
         {table && (
@@ -32,8 +32,11 @@ function HeaderContent() {
       </div>
 
       {/* Navegación Derecha */}
-      <div className="flex items-center gap-6">
-        <Link href="/menu" className="text-gray-400 hover:text-white text-sm font-bold uppercase tracking-widest transition-colors">
+      <div className="flex items-center gap-8">
+        <Link 
+          href="/menu" 
+          className="text-amber-500 hover:text-amber-400 text-sm font-black uppercase tracking-widest transition-all hover:scale-105"
+        >
           MENÚ
         </Link>
 
@@ -56,7 +59,7 @@ function HeaderContent() {
             </button>
 
             {showDropdown && (
-              <div className="absolute right-0 mt-3 w-56 bg-[#1c2128] border border-white/10 rounded-2xl shadow-2xl py-2 z-50">
+              <div className="absolute right-0 mt-3 w-56 bg-[#0a0a0a] border border-white/10 rounded-2xl shadow-2xl py-2 z-50">
                 <div className="px-4 py-3 border-b border-white/5 mb-2">
                   <p className="text-white text-sm font-bold truncate">{session.user?.name}</p>
                   <p className="text-gray-500 text-[10px] uppercase font-black tracking-widest">{(session.user as any).role}</p>
@@ -89,9 +92,9 @@ function HeaderContent() {
         ) : (
           <Link 
             href="/login" 
-            className="text-[10px] font-black text-gray-600 hover:text-amber-500 transition-colors uppercase tracking-[0.2em]"
+            className="text-xs font-black text-white hover:text-amber-500 transition-colors uppercase tracking-[0.2em]"
           >
-            Acceso Staff
+            LOGIN
           </Link>
         )}
       </div>
@@ -101,8 +104,8 @@ function HeaderContent() {
 
 export default function Header() {
   return (
-    <header className="bg-[#0f1115]/80 backdrop-blur-md border-b border-white/5 sticky top-0 z-50 h-20">
-      <Suspense fallback={<div className="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between opacity-50">Cargando...</div>}>
+    <header className="bg-black border-b border-white/5 sticky top-0 z-50 h-20 shadow-2xl">
+      <Suspense fallback={<div className="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between opacity-50 text-white">Cargando...</div>}>
         <HeaderContent />
       </Suspense>
     </header>
