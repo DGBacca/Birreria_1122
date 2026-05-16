@@ -13,6 +13,8 @@ export interface User {
   email: string;
   name: string;
   role: 'admin' | 'mesero'; // Roles definidos en la documentación
+  active?: boolean;
+  created_at?: Date;
 }
 
 // Representa una categoría de bebidas (ej: Cervezas, Vinos)
