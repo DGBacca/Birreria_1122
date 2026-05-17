@@ -88,8 +88,12 @@ export const db = {
   // --- CATEGORÍAS (CATEGORIES) ---
 
   async getCategories(): Promise<Category[]> {
-    const { rows } = await sql<Category>`SELECT * FROM categories ORDER BY display_order ASC`;
+    const { rows } = await sql<Category>`SELECT id, name, description, display_order, image_url FROM categories ORDER BY display_order ASC`;
     return rows;
+  },
+
+  async updateCategoryImage(id: number, imageUrl: string): Promise<void> {
+    await sql`UPDATE categories SET image_url = ${imageUrl} WHERE id = ${id}`;
   },
 
   async createCategory(name: string, description?: string): Promise<Category> {

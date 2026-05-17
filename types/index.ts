@@ -29,6 +29,7 @@ export interface Category {
   name: string;
   description?: string; // Campo opcional para detalles de la categoría
   display_order: number; // Orden en que se mostrará en el menú
+  image_url?: string;   // Foto representativa de la categoría en el menú
 }
 
 // Representa una bebida individual y todas sus características técnicas (Estructura de Base de Datos)

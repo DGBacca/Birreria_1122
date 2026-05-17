@@ -73,6 +73,9 @@ function HeaderContent() {
                     <Link href="/admin/carrusel" onClick={() => setShowDropdown(false)} className="block px-4 py-2 text-amber-500 hover:text-amber-400 hover:bg-amber-500/5 text-sm font-bold transition-colors">
                       🖼 CARRUSEL
                     </Link>
+                    <Link href="/admin/categorias" onClick={() => setShowDropdown(false)} className="block px-4 py-2 text-amber-500 hover:text-amber-400 hover:bg-amber-500/5 text-sm font-bold transition-colors">
+                      🗂 CATEGORÍAS
+                    </Link>
                   </>
                 )}
 
