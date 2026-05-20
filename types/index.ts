@@ -84,6 +84,8 @@ export interface OrderItem {
   order_id: number;
   drink_id: number;
   drink?: Drink;
+  drink_name?: string;
+  drink_image?: string;
   quantity: number;
   unit_price: number;
   subtotal: number;
