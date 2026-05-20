@@ -1,10 +1,6 @@
-/**
- * components/home/Carousel.tsx
- */
-
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 interface CarouselImage {
   id: number;
@@ -13,13 +9,29 @@ interface CarouselImage {
 }
 
 export default function Carousel({ images }: { images: CarouselImage[] }) {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (images.length === 0) return;
+    
+    // Auto-scroll logic
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % images.length);
-    }, 5000);
+      if (scrollRef.current) {
+        const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+        const maxScroll = scrollWidth - clientWidth;
+        
+        if (scrollLeft >= maxScroll - 10) {
+          // Reset to start if we reached the end
+          scrollRef.current.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          // Scroll one image width
+          const firstChild = scrollRef.current.firstElementChild as HTMLElement;
+          const scrollAmount = firstChild ? firstChild.clientWidth + 16 : clientWidth / 3; // 16 is gap-4
+          scrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+        }
+      }
+    }, 4000);
+    
     return () => clearInterval(interval);
   }, [images.length]);
 
@@ -32,36 +44,38 @@ export default function Carousel({ images }: { images: CarouselImage[] }) {
   }
 
   return (
-    <div className="relative w-full aspect-video md:aspect-[21/9] overflow-hidden rounded-[2.5rem] border border-white/10 group shadow-2xl">
-      {images.map((image, index) => (
-        <div
-          key={image.id}
-          className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-            index === currentIndex ? 'opacity-100' : 'opacity-0'
-          }`}
-        >
-          <img
-            src={image.url}
-            alt={image.alt_text || 'Birreria 11•22'}
-            className="w-full h-full object-cover scale-105 group-hover:scale-100 transition-transform duration-10000"
-          />
-          {/* Overlay gradiente */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-        </div>
-      ))}
-
-      {/* Indicadores */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-10">
-        {images.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentIndex(index)}
-            className={`h-1 rounded-full transition-all ${
-              index === currentIndex ? 'w-8 bg-amber-500' : 'w-2 bg-white/30'
-            }`}
-          />
+    <div className="relative w-full">
+      {/* Carrusel deslizable */}
+      <div 
+        ref={scrollRef}
+        className="flex gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide py-4 px-2"
+        style={{ scrollBehavior: 'smooth' }}
+      >
+        {images.map((image) => (
+          <div
+            key={image.id}
+            className="snap-center shrink-0 w-[80%] sm:w-[45%] md:w-[30%] lg:w-[calc(33.333%-11px)] aspect-[9/16] relative rounded-3xl overflow-hidden border border-white/10 group shadow-xl"
+          >
+            <img
+              src={image.url}
+              alt={image.alt_text || 'Birreria 11•22'}
+              className="w-full h-full object-cover scale-105 group-hover:scale-100 transition-transform duration-700"
+            />
+            {/* Overlay gradiente opcional para legibilidad si hubiera texto */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none"></div>
+          </div>
         ))}
       </div>
+
+      <style jsx global>{`
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
     </div>
   );
 }

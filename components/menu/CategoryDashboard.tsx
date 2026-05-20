@@ -53,9 +53,9 @@ export default function CategoryDashboard({
         </div>
       </div>
 
-      <main className="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 grid grid-cols-1 md:grid-cols-4 gap-6 relative">
-        {/* PANEL IZQUIERDO: Lista de Bebidas (1/4) */}
-        <div className="md:col-span-1 flex flex-col gap-3 h-[calc(100vh-140px)] overflow-y-auto pr-2 custom-scrollbar">
+      <main className="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 grid grid-cols-1 md:grid-cols-5 gap-6 relative">
+        {/* PANEL IZQUIERDO: Lista de Bebidas (2/5) */}
+        <div className="md:col-span-2 flex flex-col gap-3 h-[calc(100vh-140px)] overflow-y-auto pr-2 custom-scrollbar">
           <h2 className="text-lg font-black text-amber-500 mb-2 sticky top-0 bg-black py-2 z-10">
             {currentCategory.name.toUpperCase()}
           </h2>
@@ -67,7 +67,7 @@ export default function CategoryDashboard({
                 className={`text-left p-3 rounded-xl border transition-all ${
                   selectedDrinkId === drink.id
                     ? 'border-amber-500 bg-amber-500/10'
-                    : 'border-white/5 bg-white/5 hover:border-amber-500/30'
+                    : 'border-white/5 bg-transparent hover:border-amber-500/30'
                 }`}
               >
                 <h3 className={`font-bold text-sm ${selectedDrinkId === drink.id ? 'text-amber-400' : 'text-white'}`}>
@@ -83,65 +83,67 @@ export default function CategoryDashboard({
           )}
         </div>
 
-        {/* PANEL CENTRAL: Imagen de la Bebida (2/4) */}
-        <div className="md:col-span-2 flex items-center justify-center bg-white/5 rounded-3xl border border-white/10 p-6 relative min-h-[300px]">
+        {/* PANEL CENTRAL: Imagen de la Bebida (1/5) - Tamaño historia WhatsApp (9:16) */}
+        <div className="md:col-span-1 flex items-center justify-center relative min-h-[300px]">
           {selectedDrink ? (
             selectedDrink.image_url ? (
               <img
                 src={selectedDrink.image_url}
                 alt={selectedDrink.nombre}
-                className="max-w-full max-h-[60vh] object-contain drop-shadow-2xl"
+                className="w-full aspect-[9/16] object-cover rounded-2xl drop-shadow-2xl"
               />
             ) : (
-              <div className="text-center opacity-50">
+              <div className="w-full aspect-[9/16] bg-white/5 rounded-2xl flex flex-col items-center justify-center opacity-50">
                 <span className="text-6xl block mb-4">🍻</span>
-                <p className="text-gray-400 text-sm font-bold uppercase tracking-widest">Sin Imagen</p>
+                <p className="text-gray-400 text-sm font-bold uppercase tracking-widest text-center px-2">Sin Imagen</p>
               </div>
             )
           ) : (
-            <p className="text-gray-600">Selecciona una bebida</p>
+            <div className="w-full aspect-[9/16] bg-white/5 rounded-2xl flex items-center justify-center text-gray-600">
+              <p className="text-center px-2 text-sm">Selecciona una bebida</p>
+            </div>
           )}
         </div>
 
-        {/* PANEL DERECHO: Detalles y Controles (1/4) */}
-        <div className="md:col-span-1 flex flex-col gap-6 h-[calc(100vh-140px)] overflow-y-auto custom-scrollbar">
+        {/* PANEL DERECHO: Detalles y Controles (2/5) */}
+        <div className="md:col-span-2 flex flex-col gap-6 h-[calc(100vh-140px)] overflow-y-auto custom-scrollbar">
           {selectedDrink ? (
-            <div className="bg-white/5 rounded-3xl border border-white/10 p-5 flex flex-col h-full">
+            <div className="p-5 flex flex-col h-full">
               <div className="flex-1">
-                <h1 className="text-2xl font-black leading-tight mb-2">
+                <h1 className="text-3xl font-black leading-tight mb-2">
                   {selectedDrink.nombre}
                 </h1>
-                <p className="text-amber-500 text-xl font-bold mb-4">
+                <p className="text-amber-500 text-2xl font-bold mb-6">
                   ${Number(selectedDrink.precio).toLocaleString('es-CO')}
                 </p>
                 
                 {selectedDrink.descripcion && (
-                  <p className="text-gray-300 text-sm mb-6 leading-relaxed">
+                  <p className="text-gray-300 text-base mb-8 leading-relaxed">
                     {selectedDrink.descripcion}
                   </p>
                 )}
 
-                <div className="space-y-3 mb-6">
+                <div className="space-y-4 mb-8">
                   {selectedDrink.estilo && (
-                    <div className="flex justify-between text-xs border-b border-white/5 pb-2">
+                    <div className="flex justify-between text-sm border-b border-white/10 pb-2">
                       <span className="text-gray-500 font-bold uppercase">Estilo</span>
                       <span className="text-white text-right max-w-[60%]">{selectedDrink.estilo}</span>
                     </div>
                   )}
                   {selectedDrink.alcohol && (
-                    <div className="flex justify-between text-xs border-b border-white/5 pb-2">
+                    <div className="flex justify-between text-sm border-b border-white/10 pb-2">
                       <span className="text-gray-500 font-bold uppercase">Alcohol</span>
                       <span className="text-white text-right max-w-[60%]">{selectedDrink.alcohol}</span>
                     </div>
                   )}
                   {selectedDrink.contenido && (
-                    <div className="flex justify-between text-xs border-b border-white/5 pb-2">
+                    <div className="flex justify-between text-sm border-b border-white/10 pb-2">
                       <span className="text-gray-500 font-bold uppercase">Contenido</span>
                       <span className="text-white text-right max-w-[60%]">{selectedDrink.contenido}</span>
                     </div>
                   )}
                   {selectedDrink.origen && (
-                    <div className="flex justify-between text-xs border-b border-white/5 pb-2">
+                    <div className="flex justify-between text-sm border-b border-white/10 pb-2">
                       <span className="text-gray-500 font-bold uppercase">Origen</span>
                       <span className="text-white text-right max-w-[60%]">{selectedDrink.origen}</span>
                     </div>
@@ -151,7 +153,7 @@ export default function CategoryDashboard({
 
               {/* Order Controls (Mesero / Admin Only) */}
               {(userRole === 'mesero' || userRole === 'admin') && (
-                <div className="mt-auto pt-4 border-t border-white/10">
+                <div className="mt-auto pt-6 border-t border-white/10">
                   <OrderControl selectedDrink={selectedDrink} />
                 </div>
               )}
