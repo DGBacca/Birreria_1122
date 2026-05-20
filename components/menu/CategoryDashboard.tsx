@@ -53,9 +53,18 @@ export default function CategoryDashboard({
         </div>
       </div>
 
-      <main className="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 grid grid-cols-1 md:grid-cols-5 gap-6 relative">
-        {/* PANEL IZQUIERDO: Lista de Bebidas (2/5) */}
-        <div className="md:col-span-2 flex flex-col gap-3 h-[calc(100vh-140px)] overflow-y-auto pr-2 custom-scrollbar">
+      {/* Contenedor principal de la grilla de 3 paneles */}
+      {/* INSTRUCCIONES PARA MODIFICAR ANCHOS MANUALMENTE:
+          Actualmente usamos un sistema de 12 columnas (md:grid-cols-12).
+          La suma de los md:col-span de los 3 paneles siempre debe dar 12.
+          - Si quieres la lista más pequeña, baja su col-span (ej: md:col-span-2)
+          - Si quieres la imagen más grande, sube su col-span (ej: md:col-span-6)
+      */}
+      <main className="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 grid grid-cols-1 md:grid-cols-12 gap-6 relative">
+        
+        {/* PANEL IZQUIERDO: Lista de Bebidas */}
+        {/* Para cambiar su ancho, ajusta el valor 'md:col-span-3' */}
+        <div className="md:col-span-3 flex flex-col gap-3 h-[calc(100vh-140px)] overflow-y-auto pr-2 custom-scrollbar">
           <h2 className="text-lg font-black text-amber-500 mb-2 sticky top-0 bg-black py-2 z-10">
             {currentCategory.name.toUpperCase()}
           </h2>
@@ -83,13 +92,15 @@ export default function CategoryDashboard({
           )}
         </div>
 
-        {/* PANEL CENTRAL: Imagen de la Bebida (1/5) - Tamaño historia WhatsApp (9:16) */}
-        <div className="md:col-span-1 flex items-center justify-center relative min-h-[300px]">
+        {/* PANEL CENTRAL: Imagen de la Bebida - Tamaño historia WhatsApp (9:16) */}
+        {/* Para cambiar su ancho, ajusta el valor 'md:col-span-5' */}
+        <div className="md:col-span-5 flex items-center justify-center relative min-h-[300px]">
           {selectedDrink ? (
             selectedDrink.image_url ? (
               <img
                 src={selectedDrink.image_url}
                 alt={selectedDrink.nombre}
+                /* La clase aspect-[9/16] fuerza a que la imagen mantenga la proporción de un celular (Historia de WhatsApp) */
                 className="w-full aspect-[9/16] object-cover rounded-2xl drop-shadow-2xl"
               />
             ) : (
@@ -105,8 +116,9 @@ export default function CategoryDashboard({
           )}
         </div>
 
-        {/* PANEL DERECHO: Detalles y Controles (2/5) */}
-        <div className="md:col-span-2 flex flex-col gap-6 h-[calc(100vh-140px)] overflow-y-auto custom-scrollbar">
+        {/* PANEL DERECHO: Detalles y Controles */}
+        {/* Para cambiar su ancho, ajusta el valor 'md:col-span-4' */}
+        <div className="md:col-span-4 flex flex-col gap-6 h-[calc(100vh-140px)] overflow-y-auto custom-scrollbar">
           {selectedDrink ? (
             <div className="p-5 flex flex-col h-full">
               <div className="flex-1">
