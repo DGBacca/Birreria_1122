@@ -245,6 +245,46 @@ export const db = {
     await sql`DELETE FROM carousel_images WHERE id = ${id}`;
   },
 
+  // --- AJUSTES / BRANDING (SETTINGS) ---
+
+  async getLogoUrl(): Promise<string> {
+    try {
+      const { rows } = await sql`SELECT value FROM settings WHERE key = 'logo_url'`;
+      return rows[0]?.value || '';
+    } catch (e) {
+      // Si la tabla settings no existe todavía, la creamos y retornamos vacío
+      try {
+        await sql`
+          CREATE TABLE IF NOT EXISTS settings (
+            key TEXT PRIMARY KEY,
+            value TEXT NOT NULL
+          );
+        `;
+      } catch (err) {
+        console.error('Error al crear tabla settings:', err);
+      }
+      return '';
+    }
+  },
+
+  async setLogoUrl(url: string): Promise<void> {
+    await sql`
+      CREATE TABLE IF NOT EXISTS settings (
+        key TEXT PRIMARY KEY,
+        value TEXT NOT NULL
+      );
+    `;
+    if (!url) {
+      await sql`DELETE FROM settings WHERE key = 'logo_url'`;
+    } else {
+      await sql`
+        INSERT INTO settings (key, value)
+        VALUES ('logo_url', ${url})
+        ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value
+      `;
+    }
+  },
+
   // --- GENÉRICO ---
   
   async query(queryString: string, params: any[] = []) {

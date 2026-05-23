@@ -29,11 +29,6 @@ export default function CategoryDashboard({
       {/* Sticky Top Header */}
       <div className="sticky top-0 z-50 bg-black/80 backdrop-blur-md border-b border-white/10 pt-4 pb-2 px-4 shadow-xl">
         <div className="max-w-7xl mx-auto flex flex-col items-center">
-          {/* Logo / Header (optional small version) */}
-          <Link href="/menu" className="text-amber-500 text-xs font-black uppercase tracking-[0.4em] mb-2 hover:text-amber-400">
-            Birreria 11•22
-          </Link>
-          
           {/* Categorías (Navegación horizontal) */}
           <div className="flex w-full overflow-x-auto gap-4 pb-2 scrollbar-hide snap-x">
             {categories.map((cat) => (
@@ -92,31 +87,40 @@ export default function CategoryDashboard({
           )}
         </div>
 
-        {/* PANEL CENTRAL: Imagen de la Bebida - Tamaño historia WhatsApp (9:16) */}
+        {/* PANEL CENTRAL: Imagen de la Bebida - Tamaño historia WhatsApp (9:16) y Controles */}
         {/* Para cambiar su ancho, ajusta el valor 'md:col-span-5' */}
-        <div className="md:col-span-5 flex items-center justify-center relative min-h-[300px]">
-          {selectedDrink ? (
-            selectedDrink.image_url ? (
-              <img
-                src={selectedDrink.image_url}
-                alt={selectedDrink.nombre}
-                /* La clase aspect-[9/16] fuerza a que la imagen mantenga la proporción de un celular (Historia de WhatsApp) */
-                className="w-full aspect-[9/16] object-cover rounded-2xl drop-shadow-2xl"
-              />
+        <div className="md:col-span-5 flex flex-col gap-4 items-center md:h-[calc(100vh-140px)] h-auto overflow-hidden">
+          <div className="flex-1 w-full flex items-center justify-center overflow-hidden">
+            {selectedDrink ? (
+              selectedDrink.image_url ? (
+                <img
+                  src={selectedDrink.image_url}
+                  alt={selectedDrink.nombre}
+                  /* La clase aspect-[9/16] fuerza a que la imagen mantenga la proporción de un celular (Historia de WhatsApp) */
+                  className="max-h-full max-w-full aspect-[9/16] object-cover rounded-2xl drop-shadow-2xl"
+                />
+              ) : (
+                <div className="max-h-full max-w-full aspect-[9/16] bg-white/5 rounded-2xl flex flex-col items-center justify-center opacity-50 px-8 py-16">
+                  <span className="text-6xl block mb-4">🍻</span>
+                  <p className="text-gray-400 text-sm font-bold uppercase tracking-widest text-center px-2">Sin Imagen</p>
+                </div>
+              )
             ) : (
-              <div className="w-full aspect-[9/16] bg-white/5 rounded-2xl flex flex-col items-center justify-center opacity-50">
-                <span className="text-6xl block mb-4">🍻</span>
-                <p className="text-gray-400 text-sm font-bold uppercase tracking-widest text-center px-2">Sin Imagen</p>
+              <div className="max-h-full max-w-full aspect-[9/16] bg-white/5 rounded-2xl flex items-center justify-center text-gray-600 px-8 py-16">
+                <p className="text-center px-2 text-sm">Selecciona una bebida</p>
               </div>
-            )
-          ) : (
-            <div className="w-full aspect-[9/16] bg-white/5 rounded-2xl flex items-center justify-center text-gray-600">
-              <p className="text-center px-2 text-sm">Selecciona una bebida</p>
+            )}
+          </div>
+
+          {/* Order Controls (Mesero / Admin Only) — Ubicado debajo de la foto para estar siempre visible */}
+          {selectedDrink && (userRole === 'mesero' || userRole === 'admin') && (
+            <div className="w-full bg-[#0a0a0a] border border-white/10 rounded-2xl p-4 shadow-xl">
+              <OrderControl selectedDrink={selectedDrink} />
             </div>
           )}
         </div>
 
-        {/* PANEL DERECHO: Detalles y Controles */}
+        {/* PANEL DERECHO: Detalles */}
         {/* Para cambiar su ancho, ajusta el valor 'md:col-span-4' */}
         <div className="md:col-span-4 flex flex-col gap-6 h-[calc(100vh-140px)] overflow-y-auto custom-scrollbar">
           {selectedDrink ? (
@@ -162,13 +166,6 @@ export default function CategoryDashboard({
                   )}
                 </div>
               </div>
-
-              {/* Order Controls (Mesero / Admin Only) */}
-              {(userRole === 'mesero' || userRole === 'admin') && (
-                <div className="mt-auto pt-6 border-t border-white/10">
-                  <OrderControl selectedDrink={selectedDrink} />
-                </div>
-              )}
             </div>
           ) : (
             <div className="flex items-center justify-center h-full text-gray-600">

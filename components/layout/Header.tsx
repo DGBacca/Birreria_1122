@@ -8,21 +8,47 @@ import Link from 'next/link';
 import { useSession, signOut } from 'next-auth/react';
 import { Suspense, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { useEffect } from 'react';
 
 function HeaderContent() {
   const { data: session } = useSession();
   const searchParams = useSearchParams();
   const table = searchParams.get('table');
   const [showDropdown, setShowDropdown] = useState(false);
+  const [logoUrl, setLogoUrl] = useState<string>('');
+  const [logoLoaded, setLogoLoaded] = useState(false);
+
+  useEffect(() => {
+    fetch('/api/branding')
+      .then(res => res.json())
+      .then(data => {
+        if (data.logoUrl) {
+          setLogoUrl(data.logoUrl);
+        }
+        setLogoLoaded(true);
+      })
+      .catch(err => {
+        console.error('Error al cargar logotipo:', err);
+        setLogoLoaded(true);
+      });
+  }, []);
 
   return (
     <div className="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
       {/* Logo y Mesa */}
       <div className="flex items-center gap-4">
         <Link href="/" className="flex items-center gap-2 group">
-          <span className="text-2xl font-black text-white tracking-tighter">
-            BIRRERIA <span className="text-amber-500 group-hover:text-amber-400 transition-colors">11•22</span>
-          </span>
+          {logoLoaded && logoUrl ? (
+            <img
+              src={logoUrl}
+              alt="Logo Birreria"
+              className="h-12 w-auto object-contain max-w-[220px]"
+            />
+          ) : (
+            <span className="text-2xl font-black text-white tracking-tighter">
+              BIRRERIA <span className="text-amber-500 group-hover:text-amber-400 transition-colors">11•22</span>
+            </span>
+          )}
         </Link>
         {table && (
           <div className="bg-amber-500/10 text-amber-500 px-3 py-1 rounded-full text-[10px] font-black border border-amber-500/20 uppercase">
@@ -75,6 +101,9 @@ function HeaderContent() {
                     </Link>
                     <Link href="/admin/categorias" onClick={() => setShowDropdown(false)} className="block px-4 py-2 text-amber-500 hover:text-amber-400 hover:bg-amber-500/5 text-sm font-bold transition-colors">
                       🗂 CATEGORÍAS
+                    </Link>
+                    <Link href="/admin/branding" onClick={() => setShowDropdown(false)} className="block px-4 py-2 text-amber-500 hover:text-amber-400 hover:bg-amber-500/5 text-sm font-bold transition-colors">
+                      🎨 LOGOTIPO DE MARCA
                     </Link>
                   </>
                 )}
