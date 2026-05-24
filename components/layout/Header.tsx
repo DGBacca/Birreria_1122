@@ -59,6 +59,15 @@ function HeaderContent() {
 
       {/* Navegación Derecha — solo LOGIN o perfil de usuario */}
       <div className="flex items-center">
+        {session && ['mesero', 'admin'].includes((session.user as any).role) && (
+          <Link
+            href="/admin/mesas"
+            className="mr-4 px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-black text-xs uppercase tracking-wider transition-all flex items-center gap-2"
+          >
+            🪑 Mesas
+          </Link>
+        )}
+
         {session ? (
           <div className="relative">
             <button

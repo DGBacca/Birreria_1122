@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
 
 interface TableData {
   id: number;
@@ -25,6 +26,7 @@ interface OrderData {
 }
 
 export default function MesasPage() {
+  const { data: session } = useSession();
   const [tables, setTables] = useState<TableData[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedTable, setSelectedTable] = useState<TableData | null>(null);
@@ -33,10 +35,31 @@ export default function MesasPage() {
   const [payingId, setPayingId] = useState<number | null>(null);
   const [showConfirm, setShowConfirm] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
+  const [addingTable, setAddingTable] = useState(false);
+
+  const isAdmin = (session?.user as any)?.role === 'admin';
 
   useEffect(() => {
     fetchTables();
   }, []);
+
+  const handleAddTable = async () => {
+    setAddingTable(true);
+    try {
+      const res = await fetch('/api/mesas', { method: 'POST' });
+      if (res.ok) {
+        setSuccessMsg('✅ Nueva mesa agregada con éxito');
+        fetchTables();
+        setTimeout(() => setSuccessMsg(''), 3000);
+      } else {
+        alert('Error al agregar mesa');
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setAddingTable(false);
+    }
+  };
 
   const fetchTables = async () => {
     try {
@@ -100,9 +123,20 @@ export default function MesasPage() {
   return (
     <div className="min-h-screen bg-black p-6 text-white">
       <div className="max-w-6xl mx-auto">
-        <div className="mb-8">
-          <p className="text-amber-500 text-xs font-black uppercase tracking-[0.3em] mb-2">Gestión</p>
-          <h1 className="text-4xl font-black tracking-tighter">MESAS</h1>
+        <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <p className="text-amber-500 text-xs font-black uppercase tracking-[0.3em] mb-2">Gestión</p>
+            <h1 className="text-4xl font-black tracking-tighter">MESAS</h1>
+          </div>
+          {isAdmin && (
+            <button
+              onClick={handleAddTable}
+              disabled={addingTable}
+              className="px-5 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 disabled:opacity-50 text-black font-black text-xs uppercase tracking-wider transition-all self-start sm:self-center"
+            >
+              {addingTable ? 'AGREGANDO...' : '➕ AGREGAR MESA'}
+            </button>
+          )}
         </div>
 
         {successMsg && (
