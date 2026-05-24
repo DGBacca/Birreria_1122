@@ -19,9 +19,13 @@ export default withAuth(
     // Rutas que comienzan con /mesero
     const isMeseroRoute = pathname.startsWith('/mesero');
 
-    // 1. Si intenta entrar a admin y no es admin, redirigir al login
+    // 1. Si intenta entrar a admin y no es admin, redirigir al login (excepto /admin/mesas para meseros)
     if (isAdminRoute && token?.role !== 'admin') {
-      return NextResponse.redirect(new URL('/login', req.url));
+      if (pathname === '/admin/mesas' && token?.role === 'mesero') {
+        // Permitir que los meseros vean el panel de mesas
+      } else {
+        return NextResponse.redirect(new URL('/login', req.url));
+      }
     }
 
     // 2. Si intenta entrar a mesero y no tiene el rol permitido (admin o mesero)

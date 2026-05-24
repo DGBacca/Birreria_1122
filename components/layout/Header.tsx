@@ -88,6 +88,12 @@ function HeaderContent() {
                   MI PERFIL
                 </Link>
 
+                {['mesero', 'admin'].includes((session.user as any).role) && (
+                  <Link href="/admin/mesas" onClick={() => setShowDropdown(false)} className="block px-4 py-2 text-amber-500 hover:text-amber-400 hover:bg-amber-500/5 text-sm font-bold transition-colors">
+                    🪑 MESAS
+                  </Link>
+                )}
+
                 {(session.user as any).role === 'admin' && (
                   <>
                     <Link href="/admin" onClick={() => setShowDropdown(false)} className="block px-4 py-2 text-gray-400 hover:text-white hover:bg-white/5 text-sm font-bold transition-colors">
