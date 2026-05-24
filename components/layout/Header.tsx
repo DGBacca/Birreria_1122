@@ -58,14 +58,22 @@ function HeaderContent() {
       </div>
 
       {/* Navegación Derecha — solo LOGIN o perfil de usuario */}
-      <div className="flex items-center">
+      <div className="flex items-center text-white">
         {session && ['mesero', 'admin'].includes((session.user as any).role) && (
-          <Link
-            href="/admin/mesas"
-            className="mr-4 px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-black text-xs uppercase tracking-wider transition-all flex items-center gap-2"
-          >
-            🪑 Mesas
-          </Link>
+          <>
+            <Link
+              href="/admin/facturacion"
+              className="mr-3 px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white font-bold text-xs uppercase tracking-wider transition-all flex items-center gap-2 border border-white/10"
+            >
+              🧾 Facturación
+            </Link>
+            <Link
+              href="/admin/mesas"
+              className="mr-4 px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-black text-xs uppercase tracking-wider transition-all flex items-center gap-2"
+            >
+              🪑 Mesas
+            </Link>
+          </>
         )}
 
         {session ? (
@@ -98,9 +106,14 @@ function HeaderContent() {
                 </Link>
 
                 {['mesero', 'admin'].includes((session.user as any).role) && (
-                  <Link href="/admin/mesas" onClick={() => setShowDropdown(false)} className="block px-4 py-2 text-amber-500 hover:text-amber-400 hover:bg-amber-500/5 text-sm font-bold transition-colors">
-                    🪑 MESAS
-                  </Link>
+                  <>
+                    <Link href="/admin/facturacion" onClick={() => setShowDropdown(false)} className="block px-4 py-2 text-gray-400 hover:text-white hover:bg-white/5 text-sm font-bold transition-colors">
+                      🧾 FACTURACIÓN
+                    </Link>
+                    <Link href="/admin/mesas" onClick={() => setShowDropdown(false)} className="block px-4 py-2 text-amber-500 hover:text-amber-400 hover:bg-amber-500/5 text-sm font-bold transition-colors">
+                      🪑 MESAS
+                    </Link>
+                  </>
                 )}
 
                 {(session.user as any).role === 'admin' && (

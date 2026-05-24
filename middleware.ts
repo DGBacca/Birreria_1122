@@ -19,10 +19,11 @@ export default withAuth(
     // Rutas que comienzan con /mesero
     const isMeseroRoute = pathname.startsWith('/mesero');
 
-    // 1. Si intenta entrar a admin y no es admin, redirigir al login (excepto /admin/mesas para meseros)
+    // 1. Si intenta entrar a admin y no es admin, redirigir al login (excepto mesas y facturacion para meseros)
     if (isAdminRoute && token?.role !== 'admin') {
-      if (pathname === '/admin/mesas' && token?.role === 'mesero') {
-        // Permitir que los meseros vean el panel de mesas
+      const allowedMeseroPaths = ['/admin/mesas', '/admin/facturacion'];
+      if (allowedMeseroPaths.includes(pathname) && token?.role === 'mesero') {
+        // Permitir que los meseros vean estos paneles
       } else {
         return NextResponse.redirect(new URL('/login', req.url));
       }
